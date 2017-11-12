@@ -2,6 +2,7 @@ package com.estructuras;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -11,9 +12,9 @@ public abstract class Grafo {
 	private int numAristas;
 	private int[][] matAdyacencia;
 
-	public static final int MAXIMO_COSTO = 999;
+	private static final int COMIENZO_ARRAY = 1;
 
-	// public boolean existeArista(int i, int j);
+	public static final int MAXIMO_COSTO = 999;
 
 	public Grafo(String ruta) {
 		this.leerGrafo(ruta);
@@ -30,16 +31,8 @@ public abstract class Grafo {
 		return numVertices;
 	}
 
-	public void setNumVertices(int numVertices) {
-		this.numVertices = numVertices;
-	}
-
 	public int getNumAristas() {
 		return numAristas;
-	}
-
-	public void setNumAristas(int numAristas) {
-		this.numAristas = numAristas;
 	}
 
 	public int[][] getMatAdyacencia() {
@@ -56,7 +49,9 @@ public abstract class Grafo {
 			this.numVertices = sc.nextInt();
 			this.numAristas = sc.nextInt();
 
-			this.matAdyacencia = new int[this.numVertices + 1][this.numVertices + 1];
+			final int FINAL_ARRAY = this.numVertices + 1;
+
+			this.matAdyacencia = new int[FINAL_ARRAY][FINAL_ARRAY];
 
 			int verticeOrigen, verticeDestino, costo;
 
@@ -68,6 +63,13 @@ public abstract class Grafo {
 				this.insertarArista(verticeOrigen, verticeDestino, costo);
 			}
 
+			for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
+				for (int j = COMIENZO_ARRAY; j < FINAL_ARRAY; j++) {
+					if (j != i && this.matAdyacencia[i][j] == 0)
+						this.matAdyacencia[i][j] = MAXIMO_COSTO;
+				}
+			}
+
 			sc.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -76,13 +78,15 @@ public abstract class Grafo {
 	}
 
 	public void dijkstra(int fuente) {
-		int[] distancia = new int[this.numVertices + 1];
-		int[] padre = new int[this.numVertices + 1];
-		boolean[] visto = new boolean[this.numVertices + 1];
-		int i;
+		final int FINAL_ARRAY = this.numVertices + 1;
+
+		int[] distancia = new int[FINAL_ARRAY];
+		int[] padre = new int[FINAL_ARRAY];
+		boolean[] visto = new boolean[FINAL_ARRAY];
+
 		PriorityQueue<Integer> cola = new PriorityQueue<Integer>();
 
-		for (i = 1; i < this.numVertices + 1; i++) {
+		for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
 			distancia[i] = MAXIMO_COSTO;
 			padre[i] = 0;
 			visto[i] = false;
@@ -107,23 +111,22 @@ public abstract class Grafo {
 		}
 
 		int k;
-		for (k = 1; k < this.numVertices + 1; k++) {
+		for (k = COMIENZO_ARRAY; k < FINAL_ARRAY; k++) {
 			System.out.println("Distancia a " + k + " es " + distancia[k]);
 		}
 
 		System.out.println("--------------------------------------------");
 
-		for (k = 1; k < this.numVertices + 1; k++) {
+		for (k = COMIENZO_ARRAY; k < FINAL_ARRAY; k++) {
 			System.out.println("Padre de " + k + " es " + padre[k]);
 		}
 
 	}
 
 	public LinkedList<Integer> getAdyacentes(int nodo) {
-		int i;
 		LinkedList<Integer> vecinos = new LinkedList<Integer>();
 
-		for (i = 1; i < this.numVertices + 1; i++) {
+		for (int i = COMIENZO_ARRAY; i < this.numVertices + 1; i++) {
 			if (this.matAdyacencia[nodo][i] > 0)
 				vecinos.add(i);
 		}
@@ -131,15 +134,38 @@ public abstract class Grafo {
 	}
 
 	public LinkedList<Arista> getAristasInicidentes(int v) {
+		final int FINAL_ARRAY = this.numVertices + 1;
 		LinkedList<Arista> aristas = new LinkedList<Arista>();
-		int j;
-
-		for (j = 1; j < this.numVertices + 1; j++) {
-			if (this.matAdyacencia[v][j] != 0) {
-				aristas.add(new Arista(v, j, this.matAdyacencia[v][j]));
+	
+		for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
+			if (this.matAdyacencia[v][i] != 0) {
+				aristas.add(new Arista(v, i, this.matAdyacencia[v][i]));
 			}
 		}
 
 		return aristas;
+	}
+
+	public int[][] floyd() {
+		final int FINAL_ARRAY = this.numVertices + 1;
+		int[][] distancias = this.matAdyacencia;// Arrays.copyOf(this.matAdyacencia, FINAL_ARRAY);
+
+		for (int k = COMIENZO_ARRAY; k < FINAL_ARRAY; k++) {
+			for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
+				for (int j = COMIENZO_ARRAY; j < FINAL_ARRAY; j++) {
+					distancias[i][j] = Math.min(distancias[i][j], distancias[i][k] + distancias[k][j]);
+				}
+			}
+		}
+
+		for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
+			System.out.println("Nodo: " + i);
+			for (int j = COMIENZO_ARRAY; j < FINAL_ARRAY; j++) {
+				System.out.println("distancia a " + j + " es " + distancias[i][j]);
+			}
+			System.out.println("------------------------------");
+		}
+
+		return distancias;
 	}
 }

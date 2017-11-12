@@ -20,10 +20,12 @@ public class GrafoND extends Grafo {
 	}
 
 	public GrafoND prim(int fuente) {
+		final int FINAL_ARRAY = this.getNumVertices() + 1;
+		
 		int cantVertices = this.getNumVertices();
-		boolean[] visitado = new boolean[cantVertices + 1];
+		boolean[] visitado = new boolean[FINAL_ARRAY];
 
-		GrafoND result = new GrafoND(cantVertices);
+		GrafoND result = new GrafoND(FINAL_ARRAY);
 
 		PriorityQueue<Arista> cola = new PriorityQueue<>(
 				(Arista a1, Arista a2) -> Integer.compare(a1.getCosto(), a2.getCosto()));
@@ -54,33 +56,16 @@ public class GrafoND extends Grafo {
 		return result;
 	}
 
-	private int buscarVerticeMenorPeso() { // Se puede simplificar por que la matriz es simetrica
-		int v = 0;
-		int costo = this.MAXIMO_COSTO;
-		int cantVertices = this.getNumVertices();
-		int[][] mat = this.getMatAdyacencia();
-		int i, j;
-
-		for (i = 1; i < cantVertices + 1; i++) {
-			for (j = 1; j < cantVertices + 1; j++) {
-				if (mat[i][j] < costo)
-					v = i;
-			}
-		}
-
-		return v;
-	}
-
 	@Override
 	public String toString() {
+		final int FINAL_ARRAY = this.getNumVertices() + 1;
+		
 		String result = "Nodos: " + this.getNumVertices();
-		int i, j;
 		int[][] mat = this.getMatAdyacencia();
 
-		for (i = 1; i < this.getNumVertices() + 1; i++) {
-			for (j = i+1; j < this.getNumVertices() + 1; j++) {
+		for (int i = 1; i < FINAL_ARRAY; i++) {
+			for (int j = i+1; j < FINAL_ARRAY; j++) {
 				if (mat[i][j] != 0) {
-
 					result += ("\n" + i + " " + j + " " + mat[i][j]);
 				}
 			}
