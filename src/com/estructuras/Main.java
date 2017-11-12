@@ -7,9 +7,10 @@ public class Main {
 		
 		//grafo.dijkstra(1);
 		
-		GrafoND grafo2= new GrafoND("Grafo2.in");
+		GrafoND grafo2 = new GrafoND("Grafo3.in");//new GrafoND("Grafo2.in");
 		
-		grafo2.prim();
+		System.out.println(grafo2.prim(1).toString());
+		
 	}
 	
 }

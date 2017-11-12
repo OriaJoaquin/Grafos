@@ -24,4 +24,12 @@ public class Arista {
 	public void setCosto(int costo) {
 		this.costo = costo;
 	}
+	
+	public Arista(int nodoOrigen, int nodoDestino, int costo) {
+		this.nodoOrigen = nodoOrigen;
+		this.nodoDestino = nodoDestino;
+		this.costo = costo;
+	}
+	
+	
 }
