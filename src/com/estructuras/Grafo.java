@@ -2,9 +2,11 @@ package com.estructuras;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Scanner;
 
 public abstract class Grafo {
@@ -127,7 +129,7 @@ public abstract class Grafo {
 		LinkedList<Integer> vecinos = new LinkedList<Integer>();
 
 		for (int i = COMIENZO_ARRAY; i < this.numVertices + 1; i++) {
-			if (this.matAdyacencia[nodo][i] > 0)
+			if (this.matAdyacencia[nodo][i] < MAXIMO_COSTO)
 				vecinos.add(i);
 		}
 		return vecinos;
@@ -136,7 +138,7 @@ public abstract class Grafo {
 	public LinkedList<Arista> getAristasInicidentes(int v) {
 		final int FINAL_ARRAY = this.numVertices + 1;
 		LinkedList<Arista> aristas = new LinkedList<Arista>();
-	
+
 		for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
 			if (this.matAdyacencia[v][i] != 0) {
 				aristas.add(new Arista(v, i, this.matAdyacencia[v][i]));
@@ -167,5 +169,51 @@ public abstract class Grafo {
 		}
 
 		return distancias;
+	}
+	
+	public void bfs(int fuente) {
+		final int FINAL_ARRAY = this.numVertices + 1;
+
+		boolean[] visitado = new boolean[FINAL_ARRAY];
+		int[] distancia = new int[FINAL_ARRAY];
+		int[] padre = new int[FINAL_ARRAY];
+
+		for (int i = COMIENZO_ARRAY; i < FINAL_ARRAY; i++) {
+			distancia[i] = MAXIMO_COSTO;
+		}
+
+		visitado[fuente] = true;
+		distancia[fuente] = 0;
+		padre[fuente] = 0;
+
+		Queue<Integer> cola = new LinkedList<Integer>();
+
+		cola.add(fuente);
+
+		while (!cola.isEmpty()) {
+			int vertice = cola.poll();
+			
+			LinkedList<Integer> adyacentes =this.getAdyacentes(vertice);
+			
+			for (int v : adyacentes) {
+				if (!visitado[v]) {
+					visitado[v] = true;
+					distancia[v] = distancia[vertice] + 1;
+					padre[v] = vertice;
+					cola.add(v);
+				}
+			}
+		}
+
+		int k;
+		for (k = COMIENZO_ARRAY; k < FINAL_ARRAY; k++) {
+			System.out.println("Distancia a " + k + " es " + distancia[k]);
+		}
+
+		System.out.println("--------------------------------------------");
+
+		for (k = COMIENZO_ARRAY; k < FINAL_ARRAY; k++) {
+			System.out.println("Padre de " + k + " es " + padre[k]);
+		}
 	}
 }

@@ -3,8 +3,8 @@ package com.estructuras;
 public class Main {
 
 	public static void main(String[] args) {
-		GrafoD grafo = new GrafoD("grafo1.in");
-		grafo.dijkstra(1);
+		//GrafoD grafo = new GrafoD("grafo1.in");
+		//grafo.dijkstra(1);
 
 		
 		//GrafoND grafo2 = new GrafoND("Grafo2.in");//new GrafoND("Grafo2.in");
@@ -14,6 +14,8 @@ public class Main {
 		//GrafoND grafo = new GrafoND("grafo3.in");
 		//grafo.floyd();
 
+		GrafoND grafo = new GrafoND("grafo1.in");
+		grafo.bfs(1);
 	}
 
 }
