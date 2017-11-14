@@ -14,8 +14,9 @@ public class Main {
 		//GrafoND grafo = new GrafoND("grafo3.in");
 		//grafo.floyd();
 
-		GrafoND grafo = new GrafoND("grafo1.in");
-		grafo.bfs(1);
+		GrafoND grafo = new GrafoND("grafo4.in");
+		//grafo.bfs(1);
+		grafo.floyd();
 	}
 
 }
